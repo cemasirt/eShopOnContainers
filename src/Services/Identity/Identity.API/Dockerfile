@@ -9,8 +9,19 @@ RUN dotnet restore "Identity.API.csproj"
 RUN dotnet publish --no-restore -c Release -o /app
 
 FROM build AS publish
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+FROM base AS harden
+RUN echo "Updating and Patching" && \
+apt-get update -yq && apt-get -yq upgrade
 
-FROM base AS final
+COPY scripts/ /hardening/
+
+RUN echo "Hardening" && \
+  chmod +x /hardening/* && \
+  /hardening/remove_unwanted_packages.sh && \
+  /hardening/remove_extra_files.sh
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<
+FROM harden AS final
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "Identity.API.dll"]

@@ -3,9 +3,8 @@ WORKDIR /app
 EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
-WORKDIR /src/Services/Basket
-COPY . .
-WORKDIR ./Basket.API
+COPY ./src/Services/Basket ./src
+WORKDIR ./src/Basket/Basket.API
 RUN dotnet restore "Basket.API.csproj"
 RUN dotnet publish --no-restore -c Release -o /app
 

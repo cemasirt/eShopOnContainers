@@ -6,7 +6,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /src/Services/Basket
 COPY . .
 WORKDIR /src/Services/Basket/Basket.API
-RUN dotnet restore "Identity.API.csproj"
+RUN dotnet restore "Basket.API.csproj"
 RUN dotnet publish --no-restore -c Release -o /app
 
 FROM build as unittest
